@@ -10,8 +10,7 @@
 - 🧑‍🤝‍🧑 Separate login for Donor & Patient
 - 🖼️ Image carousel, testimonials, CTA buttons
 - 💌 Newsletter subscription
-- 💻 Modern, responsive UI using Tailwind CSS
-
+- 💻 Modern, responsive UI using Tailwind CS
 ---
 
 ## 🛠️ Tech Stack
