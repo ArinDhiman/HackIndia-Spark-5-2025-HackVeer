@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Donation - Registration & Login</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>tailwind.config={theme:{extend:{colors:{primary:'#e53e3e',secondary:'#f5f5f5'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :where([class^="ri-"])::before { content: "\f3c2"; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fafafa;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .password-toggle {
+            cursor: pointer;
+        }
+        .strength-meter {
+            height: 4px;
+            border-radius: 2px;
+            background: #e2e8f0;
+            margin-top: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+        .strength-meter-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+        .custom-file-upload {
+            cursor: pointer;
+        }
+        .custom-checkbox {
+            position: relative;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border: 2px solid #cbd5e0;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        .custom-checkbox.checked {
+            background-color: #e53e3e;
+            border-color: #e53e3e;
+        }
+        .custom-checkbox.checked::after {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 2px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        .error-message {
+            color: #e53e3e;
+            font-size: 0.75rem;
+            margin-top: 4px;
+            display: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-['Pacifico'] text-primary mb-2">Blood Bridge</h1>
+            <p class="text-gray-600">Save Lives. Donate Blood.</p>
+        </header>
+
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-10">
+            <!-- Tab Navigation -->
+            <div class="flex border-b">
+                <button id="donor-tab" class="tab-btn flex-1 py-4 px-6 text-center font-medium border-b-2 border-primary text-primary">
+                    <div class="flex items-center justify-center gap-2">
+                        <div class="w-5 h-5 flex items-center justify-center">
+                            <i class="ri-heart-pulse-line"></i>
+                        </div>
+                        <span>Donor</span>
+                    </div>
+                </button>
+                <button id="patient-tab" class="tab-btn flex-1 py-4 px-6 text-center font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700">
+                    <div class="flex items-center justify-center gap-2">
+                        <div class="w-5 h-5 flex items-center justify-center">
+                            <i class="ri-hospital-line"></i>
+                        </div>
+                        <span>Patient</span>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Donor Tab Content -->
+            <div id="donor-content" class="tab-content active p-6">
+                <div class="grid md:grid-cols-2 gap-10">
+                    <!-- Donor Registration Form -->
+                    <div class="border-r pr-6">
+                        <h2 class="text-2xl font-semibold mb-6 flex items-center">
+                            <div class="w-6 h-6 flex items-center justify-center mr-2 text-primary">
+                                <i class="ri-user-add-line"></i>
+                            </div>
+                            Register as Donor
+                        </h2>
+                        <form id="donor-registration-form">
+                            <div class="grid md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1" for="donor-first-name">First Name</label>
+                                    <input type="text" id="donor-first-name" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary/50" required>
+                                    <p class="error-message" id="donor-first-name-error"></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1" for="donor-last-name">Last Name</label>
+                                    <input type="text" id="donor-last-name" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary/50" required>
+                                    <p class="error-message" id="donor-last-name-error"></p>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1" for="donor-email">Email Address</label>
+                                <input type="email" id="donor-email" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary/50" required>
+                                <p class="error-message" id="donor-email-error"></p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1" for="donor-password">Password</label>
+                                <div class="relative">
+                                    <input type="password" id="donor-password" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary/50" required>
+                                    <div class="password-toggle absolute right-3 top-2.5 w-5 h-5 flex items-center justify-center text-gray-500">
+                                        <i class="ri-eye-line"></i>
+                                    </div>
+                                </div>
+                                <div class="strength-meter mt-2">
+                                    <div class="strength-meter-fill bg-red-400" style="width: 0%"></div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">Use 8+ characters with a mix of letters, numbers & symbols</p>
+                                <p class="error-message" id="donor-password-error"></p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1" for="donor-phone">Phone Number</label>
+                                <input type="tel" id="donor-phone" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary/50" required>
+                                <p class="error-message" id="donor-phone-error"></p>
+                            </div>
+                            
+                            <div class="grid md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1" for="donor-blood-type">Blood Type</label>
+                                    <div class="relative">
+                                        <select id="donor-blood-type" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none pr-8" required>
+                                            <option value="">Select Blood Type</option>
+                                            <option value="A+">A+</option>
+                                            <option value="A-">A-</option>
+                                            <option value="B+">B+</option>
+                                            <option value="B-">B-</option>
+                                            <option value="AB+">AB+</option>
+                                            <option value="AB-">AB-</option>
+                                            <option value="O+">O+</option>
+                                            <option value="O-">O-</option>
+                                        </select>
+                                        <div class="absolute right-3 top-2.5 w-5 h-5 flex items-center justify-center pointer-events-none text-gray-500">
+                                            <i class="ri-arrow-down-s-line"></i>
+                                        </div>
+                                    </div>
+                                    <p class="error-message" id="donor-blood-type-error"></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1" for="donor-dob">Date of Birth</label>
+                                    <input type="date" id="donor-dob" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary/50" required>
+                                    <p class="error-message" id="donor-dob-error"></p>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1" for="donor-address">Address</label>
+                                <textarea id="donor-address" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary/50" required></textarea>
+                                <p class="error-message" id="donor-address-error"></p>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label class="block text-sm font-medium text-gray-700 mb-1" for="donor-medical-report">Medical Report (Optional)</label>
+                                <div class="border border-dashed border-gray-300 rounded p-4 text-center custom-file-upload">
+                                    <input type="file" id="donor-medical-report" class="hidden" accept=".pdf,.jpg,.png">
+                                    <div class="w-10 h-10 mx-auto mb-2 flex items-center justify-center text-gray-400">
+                                        <i class="ri-upload-2-line ri-xl"></i>
+                                    </div>
+                                    <p class="text-sm text-gray-500">Drag & drop files here or <span class="text-primary">browse</span></p>
+                                    <p class="text-xs text-gray-400 mt-1">PDF, JPG or PNG (max. 5MB)</p>
+                                </div>
+                                <p class="error-message" id="donor-medical-report-error"></p>
+                            </div>
+                            
+                            <div class="flex items-start mb-6">
+                                <div class="custom-checkbox mr-2 mt-0.5" id="donor-terms-checkbox"></div>
+                                <label class="text-sm text-gray-600" for="donor-terms-checkbox">
+                                    I agree to the <a href="#" class="text-primary">Terms of Service</a> and <a href="#" class="text-primary">Privacy Policy</a>
+                                </label>
+                                <p class="error-message" id="donor-terms-error"></p>
+                            </div>
+                            
+                            <button type="submit" class="w-full bg-primary text-white py-3 px-4 rounded-button font-medium hover:bg-primary/90 transition-colors whitespace-nowrap">Register as Donor</button>
+                        </form>
+                    </div>
+                    
+                    <!-- Donor Login Section -->
+                    <div>
+                        <h2 class="text-2xl font-semibold mb-6 flex items-center">
+                            <div class="w-6 h-6 flex items-center justify-center mr-2 text-primary">
+                                <i class="ri-login-circle-line"></i>
+                            </div>
+                            Donor Login
+                        </h2>
+                        <form id="donor-login-form">
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1" for="donor-login-email">Email Address</label>
+                                <input type="email" id="donor-login-email" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary/50" required>
+                                <p class="error-message" id="donor-login-email-error"></p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1" for="donor-login-password">Password</label>
+                                <div class="relative">
+                                    <input type="password" id="donor-login-password" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary/50" required>
+                                    <div class="password-toggle absolute right-3 top-2.5 w-5 h-5 flex items-center justify-center text-gray-500">
+                                        <i class="ri-eye-line"></i>
+                                    </div>
+                                </div>
+                                <p class="error-message" id="donor-login-password-error"></p>
+                            </div>
+                            
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center">
+                                    <div class="custom-checkbox mr-2" id="donor-remember-checkbox"></div>
+                                    <label class="text-sm text-gray-600" for="donor-remember-checkbox">Remember me</label>
+                                </div>
+                                <a href="#" class="text-sm text-primary hover:underline">Forgot Password?</a>
+                            </div>
+                            
+                            <button type="submit" class="w-full bg-primary text-white py-3 px-4 rounded-button font-medium hover:bg-primary/90 transition-colors mb-4 whitespace-nowrap">Login</button>
+                            
+                            <div class="relative flex items-center justify-center mb-6">
+                                <div class="flex-grow border-t border-gray-300"></div>
+                                <span class="flex-shrink mx-4 text-gray-500 text-sm">or continue with</span>
+                                <div class="flex-grow border-t border-gray-300"></div>
+                            </div>
+                            
+                            <div class="grid grid-cols-3 gap-3">
+                                <button type="button" class="flex items-center justify-center py-2 px-4 border border-gray-300 rounded-button hover:bg-gray-50 whitespace-nowrap">
+                                    <div class="w-5 h-5 flex items-center justify-center mr-2">
+                                        <i class="ri-google-fill"></i>
+                                    </div>
+                                    <span class="text-sm">Google</span>
+                                </button>
+                                <button type="button" class="flex items-center justify-center py-2 px-4 border border-gray-300 rounded-button hover:bg-gray-50 whitespace-nowrap">
+                                    <div class="w-5 h-5 flex items-center justify-center mr-2">
+                                        <i class="ri-facebook-fill"></i>
+                                    </div>
+                                    <span class="text-sm">Facebook</span>
+                                </button>
+                                <button type="button" class="flex items-center justify-center py-2 px-4 border border-gray-300 rounded-button hover:bg-gray-50 whitespace-nowrap">
+                                    <div class="w-5 h-5 flex items-center justify-center mr-2">
+                                        <i class="ri-apple-fill"></i>
+                                    </div>
+                                    <span class="text-sm">Apple</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Patient Tab Content -->
+            <div id="patient-content" class="tab-content p-6">
+                <div class="grid md:grid-cols-2 gap-10">
+                    <!-- Patient Registration Form -->
+                    <div class="border-r pr-6">
+                        <h2 class="text-2xl font-semibold mb-6 flex items-center">
+                            <div class="w-6 h-6 flex items-center justify-center mr-2 text-primary">
+                                <i class="ri-user-add-line"></i>
+                            </div>
+                            Register as Patient
+                        </h2>
+                        <form id="patient-registration-form">
+                            <div class="grid md:grid-cols-2 gap-4 mb-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1" for="patient-first-name">First Name</label>
+                                    <input type="text" id="patient-first-name" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary/50" required>
+                                    <p class="error-message" id="patient-first-name-error"></p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1" for="patient-last-name">Last Name</label>
+                                    <input type="text" id="patient-last-name" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary/50" required>
+                                    <p class="error-message" id="patient-last-name-error"></p>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1" for="patient-email">Email Address</label>
+                                <input type="email" id="patient-email" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary/50" required>
+                                <p class="error-message" id="patient-email-error"></p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1" for="patient-password">Password</label>
+                                <div class="relative">
+                                    <input type="password" id="patient-password" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary/50" required>
+                                    <div class="password-toggle absolute right-3 top-2.5 w-5 h-5 flex items-center justify-center text-gray-500">
+                                        <i class="ri-eye-line"></i>
+                                    </div>
+                                </div>
+                                <div class="strength-meter mt-2">
+                                    <div class="strength-meter-fill bg-red-400" style="width: 0%"></div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">Use 8+ characters with a mix of letters, numbers & symbols</p>
+                                <p class="error-message" id="patient-password-error"></p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1" for="patient-phone">Phone Number</label>
+                                <input type="tel" id="patient-phone" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary/50" required>
+                                <p class="error-message" id="patient-phone-error"></p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1" for="patient-hospital">Hospital/Clinic Name (Optional)</label>
+                                <input type="text" id="patient-hospital" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary/50">
+                                <p class="error-message" id="patient-hospital-error"></p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1" for="patient-id">Patient ID (Optional)</label>
+                                <input type="text" id="patient-id" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary/50">
+                                <p class="error-message" id="patient-id-error"></p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Emergency Contact</label>
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <div>
+                                        <input type="text" id="patient-emergency-name" placeholder="Contact Name" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary/50" required>
+                                        <p class="error-message" id="patient-emergency-name-error"></p>
+                                    </div>
+                                    <div>
+                                        <input type="tel" id="patient-emergency-phone" placeholder="Contact Phone" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary/50" required>
+                                        <p class="error-message" id="patient-emergency-phone-error"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start mb-6">
+                                <div class="custom-checkbox mr-2 mt-0.5" id="patient-terms-checkbox"></div>
+                                <label class="text-sm text-gray-600" for="patient-terms-checkbox">
+                                    I agree to the <a href="#" class="text-primary">Terms of Service</a> and <a href="#" class="text-primary">Privacy Policy</a>
+                                </label>
+                                <p class="error-message" id="patient-terms-error"></p>
+                            </div>
+                            
+                            <button type="submit" class="w-full bg-primary text-white py-3 px-4 rounded-button font-medium hover:bg-primary/90 transition-colors whitespace-nowrap">Register as Patient</button>
+                        </form>
+                    </div>
+                    
+                    <!-- Patient Login Section -->
+                    <div>
+                        <h2 class="text-2xl font-semibold mb-6 flex items-center">
+                            <div class="w-6 h-6 flex items-center justify-center mr-2 text-primary">
+                                <i class="ri-login-circle-line"></i>
+                            </div>
+                            Patient Login
+                        </h2>
+                        <form id="patient-login-form">
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1" for="patient-login-email">Email Address</label>
+                                <input type="email" id="patient-login-email" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary/50" required>
+                                <p class="error-message" id="patient-login-email-error"></p>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-1" for="patient-login-password">Password</label>
+                                <div class="relative">
+                                    <input type="password" id="patient-login-password" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary/50" required>
+                                    <div class="password-toggle absolute right-3 top-2.5 w-5 h-5 flex items-center justify-center text-gray-500">
+                                        <i class="ri-eye-line"></i>
+                                    </div>
+                                </div>
+                                <p class="error-message" id="patient-login-password-error"></p>
+                            </div>
+                            
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center">
+                                    <div class="custom-checkbox mr-2" id="patient-remember-checkbox"></div>
+                                    <label class="text-sm text-gray-600" for="patient-remember-checkbox">Remember me</label>
+                                </div>
+                                <a href="#" class="text-sm text-primary hover:underline">Forgot Password?</a>
+                            </div>
+                            
+                            <button type="submit" class="w-full bg-primary text-white py-3 px-4 rounded-button font-medium hover:bg-primary/90 transition-colors mb-4 whitespace-nowrap">Login</button>
+                            
+                            <div class="relative flex items-center justify-center mb-6">
+                                <div class="flex-grow border-t border-gray-300"></div>
+                                <span class="flex-shrink mx-4 text-gray-500 text-sm">or continue with</span>
+                                <div class="flex-grow border-t border-gray-300"></div>
+                            </div>
+                            
+                            <div class="grid grid-cols-3 gap-3">
+                                <button type="button" class="flex items-center justify-center py-2 px-4 border border-gray-300 rounded-button hover:bg-gray-50 whitespace-nowrap">
+                                    <div class="w-5 h-5 flex items-center justify-center mr-2">
+                                        <i class="ri-google-fill"></i>
+                                    </div>
+                                    <span class="text-sm">Google</span>
+                                </button>
+                                <button type="button" class="flex items-center justify-center py-2 px-4 border border-gray-300 rounded-button hover:bg-gray-50 whitespace-nowrap">
+                                    <div class="w-5 h-5 flex items-center justify-center mr-2">
+                                        <i class="ri-facebook-fill"></i>
+                                    </div>
+                                    <span class="text-sm">Facebook</span>
+                                </button>
+                                <button type="button" class="flex items-center justify-center py-2 px-4 border border-gray-300 rounded-button hover:bg-gray-50 whitespace-nowrap">
+                                    <div class="w-5 h-5 flex items-center justify-center mr-2">
+                                        <i class="ri-apple-fill"></i>
+                                    </div>
+                                    <span class="text-sm">Apple</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center text-gray-500 text-sm">
+            <p>© 2025 Blood Donation Platform. All rights reserved.</p>
+            <p class="mt-1">Need help? <a href="#" class="text-primary hover:underline">Contact Support</a></p>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const API_BASE_URL = 'http://localhost:5000/api';
+
+            // Tab switching
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const target = btn.id.split('-')[0];
+                    
+                    tabBtns.forEach(b => {
+                        b.classList.remove('border-primary', 'text-primary');
+                        b.classList.add('border-transparent', 'text-gray-500');
+                    });
+                    btn.classList.remove('border-transparent', 'text-gray-500');
+                    btn.classList.add('border-primary', 'text-primary');
+                    
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(`${target}-content`).classList.add('active');
+                });
+            });
+            
+            // Password visibility toggle
+            const passwordToggles = document.querySelectorAll('.password-toggle');
+            
+            passwordToggles.forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    const passwordField = toggle.parentElement.querySelector('input');
+                    const icon = toggle.querySelector('i');
+                    
+                    if (passwordField.type === 'password') {
+                        passwordField.type = 'text';
+                        icon.classList.remove('ri-eye-line');
+                        icon.classList.add('ri-eye-off-line');
+                    } else {
+                        passwordField.type = 'password';
+                        icon.classList.remove('ri-eye-off-line');
+                        icon.classList.add('ri-eye-line');
+                    }
+                });
+            });
+            
+            // Password strength meter
+            const passwordInputs = document.querySelectorAll('#donor-password, #patient-password');
+            
+            passwordInputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    const value = input.value;
+                    const strengthMeter = input.parentElement.nextElementSibling.querySelector('.strength-meter-fill');
+                    
+                    let strength = 0;
+                    if (value.length >= 8) strength += 25;
+                    if (value.match(/[A-Z]/)) strength += 25;
+                    if (value.match(/[0-9]/)) strength += 25;
+                    if (value.match(/[^A-Za-z0-9]/)) strength += 25;
+                    
+                    strengthMeter.style.width = `${strength}%`;
+                    
+                    if (strength <= 25) {
+                        strengthMeter.classList.remove('bg-yellow-400', 'bg-green-400');
+                        strengthMeter.classList.add('bg-red-400');
+                    } else if (strength <= 75) {
+                        strengthMeter.classList.remove('bg-red-400', 'bg-green-400');
+                        strengthMeter.classList.add('bg-yellow-400');
+                    } else {
+                        strengthMeter.classList.remove('bg-red-400', 'bg-yellow-400');
+                        strengthMeter.classList.add('bg-green-400');
+                    }
+                });
+            });
+            
+            // Custom file upload
+            const fileUploads = document.querySelectorAll('.custom-file-upload');
+            
+            fileUploads.forEach(upload => {
+                const input = upload.querySelector('input[type="file"]');
+                
+                upload.addEventListener('click', () => {
+                    input.click();
+                });
+                
+                input.addEventListener('change', () => {
+                    if (input.files.length > 0) {
+                        const fileName = input.files[0].name;
+                        const fileSize = (input.files[0].size / 1024 / 1024).toFixed(2);
+                        
+                        const fileInfo = upload.querySelector('p.text-sm');
+                        fileInfo.innerHTML = `<span class="text-primary">${fileName}</span> (${fileSize} MB)`;
+                    }
+                });
+            });
+            
+            // Custom checkboxes
+            const checkboxes = document.querySelectorAll('.custom-checkbox');
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('click', () => {
+                    checkbox.classList.toggle('checked');
+                });
+            });
+
+            // Helper function to show error messages
+            const showError = (elementId, message) => {
+                const errorElement = document.getElementById(elementId);
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+            };
+
+            // Helper function to clear error messages
+            const clearErrors = (formId) => {
+                const form = document.getElementById(formId);
+                const errorElements = form.querySelectorAll('.error-message');
+                errorElements.forEach(el => {
+                    el.textContent = '';
+                    el.style.display = 'none';
+                });
+                form.querySelectorAll('[required]').forEach(field => {
+                    field.classList.remove('border-red-500');
+                });
+                const termsCheckbox = form.querySelector('.custom-checkbox');
+                if (termsCheckbox) {
+                    termsCheckbox.classList.remove('border-red-500');
+                }
+            };
+
+            // Donor Registration
+            document.getElementById('donor-registration-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                clearErrors('donor-registration-form');
+
+                const formData = new FormData();
+                formData.append('firstName', document.getElementById('donor-first-name').value);
+                formData.append('lastName', document.getElementById('donor-last-name').value);
+                formData.append('email', document.getElementById('donor-email').value);
+                formData.append('password', document.getElementById('donor-password').value);
+                formData.append('phone', document.getElementById('donor-phone').value);
+                formData.append('bloodType', document.getElementById('donor-blood-type').value);
+                formData.append('dob', document.getElementById('donor-dob').value);
+                formData.append('address', document.getElementById('donor-address').value);
+                formData.append('termsAccepted', document.getElementById('donor-terms-checkbox').classList.contains('checked'));
+                const medicalReport = document.getElementById('donor-medical-report').files[0];
+                if (medicalReport) {
+                    formData.append('medicalReport', medicalReport);
+                }
+
+                // Client-side validation
+                let isValid = true;
+                const requiredFields = document.getElementById('donor-registration-form').querySelectorAll('[required]');
+                requiredFields.forEach(field => {
+                    if (!field.value) {
+                        isValid = false;
+                        field.classList.add('border-red-500');
+                        showError(`${field.id}-error`, 'This field is required');
+                    }
+                });
+
+                if (!formData.get('termsAccepted')) {
+                    isValid = false;
+                    document.getElementById('donor-terms-checkbox').classList.add('border-red-500');
+                    showError('donor-terms-error', 'You must agree to the terms');
+                }
+
+                if (!isValid) return;
+
+                const submitButton = document.querySelector('#donor-registration-form button[type="submit"]');
+                const originalText = submitButton.textContent;
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>';
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/donor/register`, {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    const data = await response.json();
+
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalText;
+
+                    if (response.ok) {
+                        localStorage.setItem('token', data.token);
+                        alert('Donor registered successfully!');
+                        document.getElementById('donor-registration-form').reset();
+                        document.querySelectorAll('#donor-registration-form .custom-checkbox').forEach(cb => cb.classList.remove('checked'));
+                        document.querySelectorAll('#donor-registration-form .strength-meter-fill').forEach(meter => {
+                            meter.style.width = '0%';
+                            meter.classList.remove('bg-yellow-400', 'bg-green-400');
+                            meter.classList.add('bg-red-400');
+                        });
+                        // Redirect to donor dashboard or homepage
+                        // window.location.href = '/donor-dashboard';
+                    } else {
+                        showError('donor-email-error', data.message);
+                    }
+                } catch (error) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalText;
+                    showError('donor-email-error', 'Error registering donor');
+                    console.error(error);
+                }
+            });
+
+            // Donor Login
+            document.getElementById('donor-login-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                clearErrors('donor-login-form');
+
+                const formData = {
+                    email: document.getElementById('donor-login-email').value,
+                    password: document.getElementById('donor-login-password').value,
+                };
+
+                let isValid = true;
+                if (!formData.email) {
+                    isValid = false;
+                    document.getElementById('donor-login-email').classList.add('border-red-500');
+                    showError('donor-login-email-error', 'Email is required');
+                }
+                if (!formData.password) {
+                    isValid = false;
+                    document.getElementById('donor-login-password').classList.add('border-red-500');
+                    showError('donor-login-password-error', 'Password is required');
+                }
+
+                if (!isValid) return;
+
+                const submitButton = document.querySelector('#donor-login-form button[type="submit"]');
+                const originalText = submitButton.textContent;
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>';
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/donor/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData),
+                    });
+
+                    const data = await response.json();
+
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalText;
+
+                    if (response.ok) {
+                        localStorage.setItem('token', data.token);
+                        alert('Login successful!');
+                        document.getElementById('donor-login-form').reset();
+                        // Redirect to donor dashboard or homepage
+                        // window.location.href = '/donor-dashboard';
+                    } else {
+                        showError('donor-login-email-error', data.message);
+                    }
+                } catch (error) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalText;
+                    showError('donor-login-email-error', 'Error logging in');
+                    console.error(error);
+                }
+            });
+
+            // Patient Registration
+            document.getElementById('patient-registration-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                clearErrors('patient-registration-form');
+
+                const formData = new FormData();
+                formData.append('firstName', document.getElementById('patient-first-name').value);
+                formData.append('lastName', document.getElementById('patient-last-name').value);
+                formData.append('email', document.getElementById('patient-email').value);
+                formData.append('password', document.getElementById('patient-password').value);
+                formData.append('phone', document.getElementById('patient-phone').value);
+                formData.append('hospital', document.getElementById('patient-hospital').value);
+                formData.append('patientId', document.getElementById('patient-id').value);
+                formData.append('emergencyContact[name]', document.getElementById('patient-emergency-name').value);
+                formData.append('emergencyContact[phone]', document.getElementById('patient-emergency-phone').value);
+                formData.append('termsAccepted', document.getElementById('patient-terms-checkbox').classList.contains('checked'));
+
+                let isValid = true;
+                const requiredFields = document.getElementById('patient-registration-form').querySelectorAll('[required]');
+                requiredFields.forEach(field => {
+                    if (!field.value) {
+                        isValid = false;
+                        field.classList.add('border-red-500');
+                        showError(`${field.id}-error`, 'This field is required');
+                    }
+                });
+
+                if (!formData.get('termsAccepted')) {
+                    isValid = false;
+                    document.getElementById('patient-terms-checkbox').classList.add('border-red-500');
+                    showError('patient-terms-error', 'You must agree to the terms');
+                }
+
+                if (!isValid) return;
+
+                const submitButton = document.querySelector('#patient-registration-form button[type="submit"]');
+                const originalText = submitButton.textContent;
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>';
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/patient/register`, {
+                        method: 'POST',
+                        body: formData,
+                    });
+
+                    const data = await response.json();
+
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalText;
+
+                    if (response.ok) {
+                        localStorage.setItem('token', data.token);
+                        alert('Patient registered successfully!');
+                        document.getElementById('patient-registration-form').reset();
+                        document.querySelectorAll('#patient-registration-form .custom-checkbox').forEach(cb => cb.classList.remove('checked'));
+                        document.querySelectorAll('#patient-registration-form .strength-meter-fill').forEach(meter => {
+                            meter.style.width = '0%';
+                            meter.classList.remove('bg-yellow-400', 'bg-green-400');
+                            meter.classList.add('bg-red-400');
+                        });
+                        // Redirect to patient dashboard or homepage
+                        // window.location.href = '/patient-dashboard';
+                    } else {
+                        showError('patient-email-error', data.message);
+                    }
+                } catch (error) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalText;
+                    showError('patient-email-error', 'Error registering patient');
+                    console.error(error);
+                }
+            });
+
+            // Patient Login
+            document.getElementById('patient-login-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                clearErrors('patient-login-form');
+
+                const formData = {
+                    email: document.getElementById('patient-login-email').value,
+                    password: document.getElementById('patient-login-password').value,
+                };
+
+                let isValid = true;
+                if (!formData.email) {
+                    isValid = false;
+                    document.getElementById('patient-login-email').classList.add('border-red-500');
+                    showError('patient-login-email-error', 'Email is required');
+                }
+                if (!formData.password) {
+                    isValid = false;
+                    document.getElementById('patient-login-password').classList.add('border-red-500');
+                    showError('patient-login-password-error', 'Password is required');
+                }
+
+                if (!isValid) return;
+
+                const submitButton = document.querySelector('#patient-login-form button[type="submit"]');
+                const originalText = submitButton.textContent;
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto"></div>';
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/patient/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData),
+                    });
+
+                    const data = await response.json();
+
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalText;
+
+                    if (response.ok) {
+                        localStorage.setItem('token', data.token);
+                        alert('Login successful!');
+                        document.getElementById('patient-login-form').reset();
+                        // Redirect to patient dashboard or homepage
+                        // window.location.href = '/patient-dashboard';
+                    } else {
+                        showError('patient-login-email-error', data.message);
+                    }
+                } catch (error) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = originalText;
+                    showError('patient-login-email-error', 'Error logging in');
+                    console.error(error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

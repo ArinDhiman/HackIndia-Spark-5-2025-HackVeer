@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Patient Dashboard - Smart Blood Bank Management System</title>
+  <style>
+    /* General Styles */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      color: #333;
+      line-height: 1.6;
+    }
+    header, footer {
+      background-color: #b71c1c;
+      color: #fff;
+      text-align: center;
+      padding: 20px 10px;
+    }
+    nav {
+      background-color: #d32f2f;
+      text-align: center;
+      padding: 10px;
+    }
+    nav a {
+      color: #fff;
+      margin: 0 15px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    nav a:hover {
+      color: #ffe6e6;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+    }
+    h1, h2 {
+      color: #b71c1c;
+    }
+    /* Dashboard sections */
+    .dashboard-section {
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #ddd;
+    }
+    .section-header {
+      margin-bottom: 10px;
+      border-bottom: 2px solid #b71c1c;
+      padding-bottom: 5px;
+    }
+    /* Search Form */
+    .search-form {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .search-form input, .search-form button {
+      padding: 10px;
+      font-size: 1em;
+    }
+    .search-form button {
+      background-color: #b71c1c;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .search-form button:hover {
+      background-color: #8a1c1c;
+    }
+    /* Blood Request Form */
+    .request-form {
+      max-width: 600px;
+      margin: 0 auto 20px;
+      background: #f9f9f9;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .request-form label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    .request-form input, .request-form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .request-form button {
+      background-color: #b71c1c;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .request-form button:hover {
+      background-color: #8a1c1c;
+    }
+    /* Hospital Availability Section */
+    .hospital-availability {
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-left: 4px solid #b71c1c;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <h1>Smart Blood Bank Management System</h1>
+    <p>Emergency Blood Need</p>
+  </header>
+  
+  <!-- Navigation -->
+  <nav>
+    <a href="HACKINDIAPROJECT.html">Home</a>
+    <a href="patient-dashboard.html">Dashboard</a>
+    <a href="bloodrequest.html">Blood Request</a>
+    <a href="contact.html">Contact</a>
+    <a href="logout.html">Logout</a>
+  </nav>
+  
+  <!-- Main Content -->
+  <div class="container">
+    <!-- Donor Search Section -->
+    <section class="dashboard-section" id="donor-search">
+      <h2 class="section-header">Find Donors</h2>
+      <form class="search-form">
+        <input type="text" placeholder="Search donors by blood type or location..." required>
+        <button type="submit">Search</button>
+      </form>
+      <!-- Placeholder for displaying donor search results -->
+      <p>Search results will be displayed here...</p>
+    </section>
+    
+    <!-- Blood Request Submission Section -->
+    <section class="dashboard-section" id="blood-request">
+      <h2 class="section-header">Submit Blood Request</h2>
+      <form class="request-form">
+        <label for="patient-name">Your Name</label>
+        <input type="text" id="patient-name" placeholder="Enter your name" required>
+        
+        <label for="blood-type">Blood Type Needed</label>
+        <input type="text" id="blood-type" placeholder="e.g., A+, B-" required>
+        
+        <label for="contact-info">Contact Information</label>
+        <input type="text" id="contact-info" placeholder="Enter your contact details" required>
+        
+        <label for="details">Additional Details</label>
+        <textarea id="details" rows="4" placeholder="Enter any extra information..."></textarea>
+        
+        <button type="submit">Submit Request</button>
+      </form>
+    </section>
+    
+    <!-- Notifications & Updates Section -->
+    <section class="dashboard-section" id="notifications">
+      <h2 class="section-header">Notifications & Updates</h2>
+      <ul>
+        <li>You have a new donor match notification!</li>
+        <li>Hospital availability updated in your area.</li>
+        <!-- Additional notifications can be added here -->
+      </ul>
+    </section>
+    
+    <!-- Real-Time Hospital Availability Section -->
+    <section class="dashboard-section" id="hospital-availability">
+      <h2 class="section-header">Hospital Availability</h2>
+      <div class="hospital-availability">
+        <p>Real-time updates on hospital blood supplies and donor availability will appear here.</p>
+        <!-- This section can eventually integrate live data from the hospital API -->
+      </div>
+    </section>
+  </div>
+  
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Smart Blood Bridge Bank Management System. All Rights Reserved.</p>
+  </footer>
+</body>
+</html>

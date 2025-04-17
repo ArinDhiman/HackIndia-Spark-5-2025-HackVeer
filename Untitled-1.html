@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blood Bridge Management System</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+  <style>
+    .carousel-slide {
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+    .carousel-slide.active {
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body class="bg-white text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="text-2xl font-bold text-red-600">Blood Bridge</div>
+      <nav class="hidden md:flex space-x-6">
+        <a href="#" class="text-gray-700 hover:text-red-600">Home</a>
+        <a href="#" class="text-gray-700 hover:text-red-600">About</a>
+        <a href="#" class="text-gray-700 hover:text-red-600">Donate</a>
+        <a href="#" class="text-gray-700 hover:text-red-600">Contact</a>
+      </nav>
+      <button id="mobile-menu-button" aria-label="Open mobile menu" class="md:hidden">
+        <i class="ri-menu-line text-2xl text-red-600"></i>
+      </button>
+    </div>
+    <div id="mobile-menu" class="absolute left-0 right-0 top-full bg-white shadow-md transform transition-transform duration-300 -translate-y-full md:hidden">
+      <nav class="flex flex-col space-y-4 p-4">
+        <a href="#" class="text-gray-700 hover:text-red-600">Home</a>
+        <a href="#" class="text-gray-700 hover:text-red-600">About</a>
+        <a href="#" class="text-gray-700 hover:text-red-600">Donate</a>
+        <a href="#" class="text-gray-700 hover:text-red-600">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Carousel -->
+  <section class="relative h-[500px] overflow-hidden">
+    <div class="absolute inset-0 flex">
+      <div class="carousel-slide w-full h-full absolute" style="background-image: url('carousel1.webp');"></div>
+      <div class="carousel-slide w-full h-full absolute" style="background-image: url('carousel2.webp');"></div>
+      <div class="carousel-slide w-full h-full absolute" style="background-image: url('carousel3.webp');"></div>
+    </div>
+    <div class="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center text-white">
+      <h1 class="text-4xl font-bold mb-4">Give the Gift of Life</h1>
+      <p class="text-xl mb-6">Donate blood. Save lives. Be a hero.</p>
+      <a href="donate.html" class="bg-red-600 hover:bg-red-700 px-6 py-3 rounded-lg font-semibold transition duration-300 shadow-lg">
+        Donate Now
+      </a>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="py-12 bg-gray-100 text-center">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <p class="text-5xl font-bold text-red-600 mb-2">1,245</p>
+          <p class="text-gray-700">Successful Donations</p>
+        </div>
+        <div>
+          <p class="text-5xl font-bold text-red-600 mb-2">320</p>
+          <p class="text-gray-700">Active Donors</p>
+        </div>
+        <div>
+          <p class="text-5xl font-bold text-red-600 mb-2">890</p>
+          <p class="text-gray-700">Blood Requests</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-white shadow-inner py-6 text-center text-gray-600">
+    <p>&copy; 2025 Blood Bridge. All rights reserved.</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('-translate-y-full');
+      mobileMenu.classList.toggle('translate-y-0');
+    });
+
+    // Carousel
+    const slides = document.querySelectorAll('.carousel-slide');
+    let currentSlide = 0;
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.remove('active');
+        if (i === index) slide.classList.add('active');
+      });
+    }
+
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % slides.length;
+      showSlide(currentSlide);
+    }
+
+    setInterval(nextSlide, 4000);
+    window.onload = () => showSlide(currentSlide);
+  </script>
+
+</body>
+
+</html>

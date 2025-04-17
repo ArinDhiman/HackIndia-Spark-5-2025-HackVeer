@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Bridge Management System</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>tailwind.config = { theme: { extend: { colors: { primary: '#E53935', secondary: '#FF5252' }, borderRadius: { 'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px', 'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px', 'full': '9999px', 'button': '8px' } } } }</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="project.js">
+    <style>
+        :where([class^="ri-"])::before {
+            content: "\f3c2";
+        }
+
+        body {
+
+            font-family: 'Inter', sans-serif;
+        }
+
+        .hero-section {
+            position: relative;
+            min-height: 600px;
+            overflow: hidden;
+        }
+
+        .cta-button {
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #E53935;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .mobile-menu {
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+
+<body class="bg-white">
+    <!-- Header & Navigation -->
+    <header class="fixed top-0 left-0 w-full bg-white shadow-md z-50">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center">
+                <div class="flex items-center">
+                    <i class="ri-drop-fill text-primary text-3xl mr-1"></i>
+                    <h1 class="text-2xl font-['Pacifico'] text-primary mr-2">Blood Bridge</h1>
+                </div>
+                <div class="hidden md:block">
+                    <h2 class="text-lg font-bold text-gray-800">Blood Bridge Management System</h2>
+                    <p class="text-sm text-gray-600">Connecting donors with those in need</p>
+                </div>
+            </div>
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#" class="nav-link active text-primary font-medium"><a href="HACKINDIAPROJECT.html">Home</a>
+                    <a href="#" class="nav-link text-gray-700 hover:text-primary font-medium"><a
+                            href="about.html">About</a>
+
+                        <a href="#" class="nav-link text-gray-700 hover:text-primary font-medium">Contact</a>
+            </nav>
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden flex items-center">
+                <button id="mobile-menu-button" class="w-10 h-10 flex items-center justify-center text-gray-700">
+                    <i class="ri-menu-line ri-2x"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Navigation -->
+        <div id="mobile-menu"
+            class="md:hidden bg-white shadow-md mobile-menu transform -translate-y-full h-0 overflow-hidden">
+            <div class="container mx-auto px-4 py-3">
+                <a href="#" class="block py-2 text-primary font-medium border-b border-gray-100">Home</a>
+                <a href="#"
+                    class="block py-2 text-gray-700 hover:text-primary font-medium border-b border-gray-100">About</a>
+                <a href="#"
+                    class="block py-2 text-gray-700 hover:text-primary font-medium border-b border-gray-100">Features</a>
+                <a href="#" class="block py-2 text-gray-700 hover:text-primary font-medium">Contact</a>
+            </div>
+        </div>
+    </header>
+    <!-- Main Content -->
+    <main class="pt-20">
+        <!-- Hero Section with Image Carousel -->
+        <section class="hero-section w-full flex items-center">
+            <div id="hero-carousel" class="absolute top-0 left-0 w-full h-full">
+                <div
+                    class="carousel-slide absolute top-0 left-0 w-full h-full opacity-0 transition-opacity duration-1000">
+                    <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-black/70 via-black/50 to-transparent"
+                        style="background-image: url('https://readdy.ai/api/search-image?query=a%20modern%2C%20minimalist%20medical%20facility%20with%20soft%20warm%20lighting%20and%20clean%20white%20walls%2C%20featuring%20elegant%20medical%20equipment%20and%20a%20calming%20atmosphere.%20The%20scene%20has%20a%20gentle%20gradient%20from%20dark%20to%20light%2C%20perfect%20for%20text%20overlay.%20The%20image%20shows%20professional%20medical%20environment%20with%20sophisticated%20technology%20and%20serene%20ambiance&width=1920&height=1080&seq=12346&orientation=landscape'); background-size: cover; background-position: center;">
+                    </div>
+                </div>
+                <div
+                    class="carousel-slide absolute top-0 left-0 w-full h-full opacity-0 transition-opacity duration-1000">
+                    <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-black/70 via-black/50 to-transparent"
+                        style="background-image: url('https://readdy.ai/api/search-image?query=an%20abstract%20medical%20background%20with%20flowing%20red%20elements%20symbolizing%20blood%20donation%2C%20featuring%20modern%20geometric%20patterns%20and%20soft%20lighting.%20The%20composition%20transitions%20from%20dark%20to%20light%20creating%20perfect%20space%20for%20text.%20High-end%203D%20rendering%20with%20professional%20lighting%20and%20depth&width=1920&height=1080&seq=12347&orientation=landscape'); background-size: cover; background-position: center;">
+                    </div>
+                </div>
+                <div
+                    class="carousel-slide absolute top-0 left-0 w-full h-full opacity-0 transition-opacity duration-1000">
+                    <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-black/70 via-black/50 to-transparent"
+                        style="background-image: url('https://readdy.ai/api/search-image?query=a%20sophisticated%20healthcare%20environment%20with%20clean%20lines%20and%20modern%20medical%20technology%2C%20featuring%20subtle%20red%20accents%20and%20professional%20lighting.%20The%20scene%20has%20a%20gradient%20effect%20perfect%20for%20text%20overlay%2C%20showing%20an%20upscale%20medical%20facility%20with%20state-of-the-art%20equipment&width=1920&height=1080&seq=12348&orientation=landscape'); background-size: cover; background-position: center;">
+                    </div>
+                </div>
+            </div>
+            <div class="container mx-auto px-4 py-20 md:py-32 relative z-10">
+                <div class="max-w-2xl text-white">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-4">Saving Lives Through Blood Donation</h1>
+                    <p class="text-xl mb-8">Our advanced management system connects donors with patients in need,
+                        streamlining the process and saving more lives every day.</p>
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <button
+                            class="cta-button bg-primary hover:bg-red-700 text-white font-semibold py-3 px-8 !rounded-button whitespace-nowrap"><a
+                                href="registerasdonor.html">Donate Now</a></button>
+                        <button
+                            class="cta-button bg-secondary hover:bg-red-400 text-white font-semibold py-3 px-8 !rounded-button whitespace-nowrap">
+                            Request Blood
+                        </button>
+                        <button
+                            class="cta-button bg-white text-red-600 hover:bg-red-50 font-semibold py-3 px-8 !rounded-button whitespace-nowrap"><a
+                                href="ebn.html">Emergency Blood Need</a>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Features Section -->
+        <section class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Why Choose Our System?</h2>
+                    <p class="text-lg text-gray-600 max-w-3xl mx-auto">Our innovative platform offers comprehensive
+                        blood bank management with real-time inventory tracking and donor-recipient matching.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Feature 1 -->
+                    <div class="bg-white p-8 rounded shadow-md hover:shadow-lg transition-shadow">
+                        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-6 mx-auto">
+                            <i class="ri-heart-pulse-line ri-2x text-primary"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3 text-center">Real-time Inventory</h3>
+                        <p class="text-gray-600 text-center">Track blood inventory levels across multiple locations with
+                            real-time updates and alerts for critical shortages.</p>
+                    </div>
+                    <!-- Feature 2 -->
+                    <div class="bg-white p-8 rounded shadow-md hover:shadow-lg transition-shadow">
+                        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-6 mx-auto">
+                            <i class="ri-user-search-line ri-2x text-primary"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3 text-center">Smart Matching</h3>
+                        <p class="text-gray-600 text-center">Our AI-powered system matches donors with recipients based
+                            on blood type, location, and urgency of need.</p>
+                    </div>
+                    <!-- Feature 3 -->
+                    <div class="bg-white p-8 rounded shadow-md hover:shadow-lg transition-shadow">
+                        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-6 mx-auto">
+                            <i class="ri-shield-check-line ri-2x text-primary"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3 text-center">Secure & Compliant</h3>
+                        <p class="text-gray-600 text-center">HIPAA-compliant platform ensures all donor and patient data
+                            is securely stored and managed.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Statistics Section -->
+        <section class="py-16 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Making a Difference</h2>
+                    <p class="text-lg text-gray-600 max-w-3xl mx-auto">Our platform has helped thousands of patients
+                        receive life-saving blood donations.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <!-- Stat 1 -->
+                    <div class="text-center">
+                        <p class="text-5xl font-bold text-primary mb-2">0</p>
+                        <p class="text-gray-600">Successful Donations</p>
+                    </div>
+                    <!-- Stat 2 -->
+                    <div class="text-center">
+                        <p class="text-5xl font-bold text-primary mb-2">0</p>
+                        <p class="text-gray-600">Registered Donors</p>
+                    </div>
+                    <!-- Stat 3 -->
+                    <div class="text-center">
+                        <p class="text-5xl font-bold text-primary mb-2">0</p>
+                        <p class="text-gray-600">Partner Hospitals</p>
+                    </div>
+                    <!-- Stat 4 -->
+                    <div class="text-center">
+                        <p class="text-5xl font-bold text-primary mb-2">0</p>
+                        <p class="text-gray-600">Lives Saved</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Testimonials Section -->
+        <section class="py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">What People Say</h2>
+                    <p class="text-lg text-gray-600 max-w-3xl mx-auto">Hear from donors, recipients, and healthcare
+                        professionals who use our system.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Testimonial 1 -->
+                    <div class="bg-white p-8 rounded shadow-md">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="ri-user-line ri-lg text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Dr. Emily Richardson</h4>
+                                <p class="text-sm text-gray-600">Hematologist, Memorial Hospital</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 italic">"This system has revolutionized how we manage blood inventory.
+                            We can now respond to emergencies much faster and ensure we always have the right blood
+                            types available."</p>
+                    </div>
+                    <!-- Testimonial 2 -->
+                    <div class="bg-white p-8 rounded shadow-md">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="ri-user-line ri-lg text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Michael Thompson</h4>
+                                <p class="text-sm text-gray-600">Regular Blood Donor</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 italic">"I love getting notifications when my blood type is needed. It
+                            makes me feel like I'm directly helping someone in need, and the donation process is so
+                            streamlined now."</p>
+                    </div>
+                    <!-- Testimonial 3 -->
+                    <div class="bg-white p-8 rounded shadow-md">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                                <i class="ri-user-line ri-lg text-primary"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Sarah Martinez</h4>
+                                <p class="text-sm text-gray-600">Blood Recipient</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 italic">"During my emergency surgery, I needed multiple transfusions.
+                            Thanks to this system, the hospital had exactly what I needed on hand. I'm forever grateful
+                            to the donors and this platform."</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Newsletter Section -->
+        <section class="py-16 bg-primary">
+            <div class="container mx-auto px-4">
+                <div class="max-w-3xl mx-auto text-center text-white">
+                    <h2 class="text-3xl font-bold mb-4">Stay Informed</h2>
+                    <p class="text-lg mb-8">Subscribe to our newsletter for updates on blood drives, donor
+                        opportunities, and system improvements.</p>
+                    <form class="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
+                        <input type="email" placeholder="Your email address"
+                            class="flex-grow py-3 px-4 !rounded-button border-none text-gray-800 focus:outline-none focus:ring-2 focus:ring-white">
+                        <button type="submit"
+                            class="bg-white text-primary hover:bg-gray-100 font-semibold py-3 px-8 !rounded-button whitespace-nowrap cta-button">
+                            Subscribe
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <!-- Call to Action Section -->
+        <section class="py-20 bg-white">
+            <div class="container mx-auto px-4">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">Ready to Make a Difference?</h2>
+                    <p class="text-lg text-gray-600 mb-8">Whether you're a donor, a patient, or a healthcare facility,
+                        our platform connects everyone in the blood donation ecosystem.</p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4">
+                        <button
+                            class="cta-button bg-primary hover:bg-red-700 text-white font-semibold py-3 px-8 !rounded-button whitespace-nowrap"><a
+                                href="registerasdonor.html">
+                                Register as Donor</a>
+                        </button>
+                        <button
+                            class="cta-button bg-secondary hover:bg-red-400 text-white font-semibold py-3 px-8 !rounded-button whitespace-nowrap"><a
+                                href="registerashospital.html">
+                                Register as Hospital</a>
+                        </button>
+                        <button
+                            class="cta-button bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 px-8 !rounded-button whitespace-nowrap"><a
+                                href="contact.html">Contact Us</a>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <!-- Column 1 -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Blood Bridge</h3>
+                    <p class="text-gray-400 mb-4">Connecting donors with those in need through innovative technology and
+                        compassionate care.</p>
+                    <div class="flex space-x-4">
+                        <a href="#"
+                            class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary transition-colors">
+                            <i class="ri-facebook-fill"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary transition-colors">
+                            <i class="ri-twitter-fill"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary transition-colors">
+                            <i class="ri-instagram-fill"></i>
+                        </a>
+                        <a href="#"
+                            class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary transition-colors">
+                            <i class="ri-linkedin-fill"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- Column 2 -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Home</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Features</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Testimonials</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                <!-- Column 3 -->
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Resources</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Blood Donation FAQ</a>
+                        </li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Eligibility
+                                Requirements</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Blood Types Guide</a>
+                        </li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Donation Process</a>
+                        </li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors">Research & News</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Column 4 -->
+                <div>
+                    <a href="contactsupport.htm" class="text-xl font-semibold mb-4">Contact Us</a>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <div class="w-5 h-5 flex items-center justify-center mt-1 mr-2">
+                                <i class="ri-map-pin-line text-primary"></i>
+                            </div>
+                            <span class="text-gray-400">123 Medical Center office, chandigarh</span>
+                        </li>
+                        <li class="flex items-center">
+                            <div class="w-5 h-5 flex items-center justify-center mr-2">
+                                <i class="ri-phone-line text-primary"></i>
+                            </div>
+                            <span class="text-gray-400">+91 9608769425</span>
+                        </li>
+                        <li class="flex items-center">
+                            <div class="w-5 h-5 flex items-center justify-center mr-2">
+                                <i class="ri-mail-line text-primary"></i>
+                            </div>
+                            <span class="text-gray-400">ananyanandgautam1503@gmail.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 mt-8 text-center">
+                <p class="text-gray-400">&copy; 2025 Blood Bridge Management System. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Image carousel functionality
+            const slides = document.querySelectorAll('.carousel-slide');
+            let currentSlide = 0;
+            function showSlide(index) {
+                slides.forEach(slide => slide.style.opacity = '0');
+                slides[index].style.opacity = '1';
+            }
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % slides.length;
+                showSlide(currentSlide);
+            }
+            // Show first slide initially
+            showSlide(0);
+            // Change slide every 4 seconds
+            setInterval(nextSlide, 4000);
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            let isMenuOpen = false;
+            mobileMenuButton.addEventListener('click', function () {
+                isMenuOpen = !isMenuOpen;
+                if (isMenuOpen) {
+                    mobileMenu.style.transform = 'translateY(0)';
+                    mobileMenu.style.height = 'auto';
+                    mobileMenuButton.innerHTML = '<i class="ri-close-line ri-2x"></i>';
+                } else {
+                    mobileMenu.style.transform = 'translateY(-100%)';
+                    mobileMenu.style.height = '0';
+                    mobileMenuButton.innerHTML = '<i class="ri-menu-line ri-2x"></i>';
+                }
+            });
+            // Add scroll animation for elements
+            const animateOnScroll = function () {
+                const elements = document.querySelectorAll('.grid > div');
+                elements.forEach(element => {
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const screenPosition = window.innerHeight / 1.3;
+                    if (elementPosition < screenPosition) {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }
+                });
+            };
+            // Set initial styles for animation
+            const gridItems = document.querySelectorAll('.grid > div');
+            gridItems.forEach(item => {
+                item.style.opacity = '0';
+                item.style.transform = 'translateY(20px)';
+                item.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            });
+            // Run on scroll
+            window.addEventListener('scroll', animateOnScroll);
+            // Run once on page load
+            animateOnScroll();
+        });
+    </script>
+</body>
+
+</html>

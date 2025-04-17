@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Dashboard | Blood Donation Platform</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>tailwind.config = { theme: { extend: { colors: { primary: '#e53e3e', secondary: '#f6e05e' }, borderRadius: { 'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px', 'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px', 'full': '9999px', 'button': '8px' } } } }</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :where([class^="ri-"])::before {
+            content: "\f3c2";
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .donation-table th,
+        .donation-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+        }
+
+        .donation-table tbody tr {
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .donation-table tbody tr:hover {
+            background-color: #fef2f2;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .custom-checkbox {
+            position: relative;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid #d1d5db;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .custom-checkbox.checked {
+            background-color: #e53e3e;
+            border-color: #e53e3e;
+        }
+
+        .custom-checkbox.checked::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 6px;
+            width: 6px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .calendar-day {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .calendar-day.today {
+            background-color: #fee2e2;
+            font-weight: 600;
+        }
+
+        .calendar-day.appointment {
+            background-color: #e53e3e;
+            color: white;
+            font-weight: 600;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 400px;
+            max-width: 90%;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h2 class="text-xl font-bold mb-4">Donor Login</h2>
+            <div id="loginError" class="hidden text-red-600 text-sm mb-4"></div>
+            <div class="mb-4">
+                <label class="block text-sm text-gray-600 mb-1" for="loginEmail">Email</label>
+                <input id="loginEmail" type="email" class="w-full px-3 py-2 border rounded" placeholder="Enter your email">
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm text-gray-600 mb-1" for="loginPassword">Password</label>
+                <input id="loginPassword" type="password" class="w-full px-3 py-2 border rounded" placeholder="Enter your password">
+            </div>
+            <div class="flex justify-end gap-2">
+                <button id="cancelLogin" class="px-4 py-2 text-sm bg-gray-200 rounded hover:bg-gray-300">Cancel</button>
+                <button id="submitLogin" class="px-4 py-2 text-sm bg-primary text-white rounded hover:bg-red-700">Login</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Navigation Bar -->
+    <nav class="bg-white shadow-sm py-4 px-6 flex items-center justify-between">
+        <div class="flex items-center">
+            <a href="#" class="text-2xl font-['Pacifico'] text-primary">Blood Bridge</a>
+            <div class="hidden md:flex ml-10 space-x-6">
+                <a href="#" class="text-primary font-medium">Dashboard</a>
+                <a href="#" class="text-gray-600 hover:text-primary">Donation Centers</a>
+                <a href="#" class="text-gray-600 hover:text-primary">Resources</a>
+                <a href="#" class="text-gray-600 hover:text-primary">Community</a>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+            <div class="relative">
+                <button class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200">
+                    <i class="ri-notification-3-line text-gray-700"></i>
+                </button>
+                <span id="notificationCount" class="absolute top-0 right-0 h-5 w-5 flex items-center justify-center bg-primary text-white text-xs rounded-full">0</span>
+            </div>
+            <div id="authSection" class="flex items-center space-x-2">
+                <button id="loginButton" class="px-4 py-2 text-sm bg-primary text-white rounded-button hover:bg-red-700">Login</button>
+            </div>
+        </div>
+    </nav>
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
+        <div class="flex flex-col md:flex-row gap-8">
+            <!-- Main Content (70%) -->
+            <div class="w-full md:w-2/3">
+                <!-- Welcome Message -->
+                <div class="bg-white rounded shadow-sm p-6 mb-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h1 id="welcomeMessage" class="text-2xl font-bold text-gray-800">Welcome back!</h1>
+                            <p class="text-gray-600 mt-1">Thank you for your continued support in saving lives.</p>
+                        </div>
+                        <div id="eligibilityStatus" class="bg-gray-200 px-4 py-2 rounded-full">
+                            <p class="text-gray-800 font-medium text-sm">Loading...</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                        <div class="bg-gray-50 rounded p-4">
+                            <p class="text-gray-500 text-sm">Total Donations</p>
+                            <p id="totalDonations" class="text-2xl font-bold text-gray-800 mt-1">0 units</p>
+                        </div>
+                        <div class="bg-gray-50 rounded p-4">
+                            <p class="text-gray-500 text-sm">Last Donation</p>
+                            <p id="lastDonation" class="text-2xl font-bold text-gray-800 mt-1">-</p>
+                        </div>
+                        <div class="bg-gray-50 rounded p-4">
+                            <p class="text-gray-500 text-sm">Next Eligible Date</p>
+                            <p id="nextEligible" class="text-2xl font-bold text-primary mt-1">-</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Donation History -->
+                <div class="bg-white rounded shadow-sm p-6 mb-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-gray-800">Donation History</h2>
+                        <div class="flex gap-2">
+                            <button id="exportDonations" class="px-4 py-2 text-sm bg-white border border-gray-300 text-gray-700 rounded-button hover:bg-gray-50 whitespace-nowrap">
+                                <i class="ri-download-line mr-1"></i> Export
+                            </button>
+                            <button class="px-4 py-2 text-sm bg-white border border-gray-300 text-gray-700 rounded-button hover:bg-gray-50 whitespace-nowrap">
+                                <i class="ri-filter-3-line mr-1"></i> Filter
+                            </button>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full donation-table">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="text-gray-600 font-medium">Date</th>
+                                    <th class="text-gray-600 font-medium">Location</th>
+                                    <th class="text-gray-600 font-medium">Type</th>
+                                    <th class="text-gray-600 font-medium">Units</th>
+                                    <th class="text-gray-600 font-medium">Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody id="donationTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="flex justify-between items-center mt-4">
+                        <p id="donationPaginationInfo" class="text-sm text-gray-500">Showing 0 of 0 donations</p>
+                        <div id="donationPagination" class="flex gap-2"></div>
+                    </div>
+                </div>
+                <!-- Upcoming Donations -->
+                <div class="bg-white rounded shadow-sm p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-gray-800">Upcoming Appointments</h2>
+                        <button id="scheduleNewAppointment" class="px-4 py-2 text-sm bg-primary text-white rounded-button hover:bg-red-700 whitespace-nowrap">
+                            <i class="ri-calendar-line mr-1"></i> Schedule New
+                        </button>
+                    </div>
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 id="calendarMonth" class="font-medium text-gray-700">April 2025</h3>
+                            <div class="flex gap-2">
+                                <button id="prevMonth" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100">
+                                    <i class="ri-arrow-left-s-line"></i>
+                                </button>
+                                <button id="nextMonth" class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100">
+                                    <i class="ri-arrow-right-s-line"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-7 gap-1 text-center mb-2">
+                            <span class="text-xs text-gray-500">Sun</span>
+                            <span class="text-xs text-gray-500">Mon</span>
+                            <span class="text-xs text-gray-500">Tue</span>
+                            <span class="text-xs text-gray-500">Wed</span>
+                            <span class="text-xs text-gray-500">Thu</span>
+                            <span class="text-xs text-gray-500">Fri</span>
+                            <span class="text-xs text-gray-500">Sat</span>
+                        </div>
+                        <div id="calendarDays" class="grid grid-cols-7 gap-1"></div>
+                    </div>
+                    <div id="appointmentList" class="border-t pt-4"></div>
+                </div>
+            </div>
+            <!-- Right Sidebar (30%) -->
+            <div class="w-full md:w-1/3">
+                <!-- Profile Card -->
+                <div class="bg-white rounded shadow-sm p-6 mb-6">
+                    <div class="flex items-center">
+                        <div class="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                            <img id="profilePicture" src="" alt="Profile" class="w-full h-full object-cover">
+                        </div>
+                        <div class="ml-4">
+                            <h2 id="profileName" class="text-xl font-bold text-gray-800">Loading...</h2>
+                            <div class="flex items-center mt-1">
+                                <span id="bloodType" class="bg-red-100 text-primary px-2 py-0.5 rounded-full text-sm font-medium">-</span>
+                                <span id="donorId" class="ml-2 text-sm text-gray-500">ID: -</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <button id="updateProfile" class="w-full py-2.5 bg-white border border-gray-300 text-gray-700 rounded-button hover:bg-gray-50 flex items-center justify-center whitespace-nowrap">
+                            <i class="ri-user-settings-line mr-2"></i> Update Profile
+                        </button>
+                    </div>
+                    <div class="mt-4 grid grid-cols-2 gap-2">
+                        <button class="py-2.5 bg-white border border-gray-300 text-gray-700 rounded-button hover:bg-gray-50 flex items-center justify-center whitespace-nowrap">
+                            <i class="ri-file-list-3-line mr-2"></i> Records
+                        </button>
+                        <button class="py-2.5 bg-white border border-gray-300 text-gray-700 rounded-button hover:bg-gray-50 flex items-center justify-center whitespace-nowrap">
+                            <i class="ri-medal-line mr-2"></i> Badges
+                        </button>
+                    </div>
+                </div>
+                <!-- Quick Stats -->
+                <div class="bg-white rounded shadow-sm p-6 mb-6">
+                    <h2 class="text-lg font-bold text-gray-800 mb-4">Your Impact</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-sm text-gray-600">Lives Impacted</span>
+                                <span id="livesImpacted" class="text-sm font-medium text-gray-800">0</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div id="livesImpactedBar" class="bg-primary h-2 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-sm text-gray-600">Donation Goal 2025</span>
+                                <span id="donationGoal" class="text-sm font-medium text-gray-800">0 of 5</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div id="donationGoalBar" class="bg-primary h-2 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-sm text-gray-600">Donor Rank</span>
+                                <span id="donorRank" class="text-sm font-medium text-gray-800">-</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div id="donorRankBar" class="bg-primary h-2 rounded-full" style="width: 0%"></div>
+                            </div>
+                            <p id="rankProgress" class="text-xs text-gray-500 mt-1">-</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Health Tips -->
+                <div class="bg-white rounded shadow-sm p-6 mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-bold text-gray-800">Health Tips</h2>
+                        <button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100">
+                            <i class="ri-refresh-line"></i>
+                        </button>
+                    </div>
+                    <div class="space-y-4 max-h-80 overflow-y-auto pr-2">
+                        <div class="border-l-4 border-primary pl-3 py-1">
+                            <h3 class="font-medium text-gray-800">Stay Hydrated</h3>
+                            <p class="text-sm text-gray-600 mt-1">Drink plenty of water before and after donation to
+                                help your body recover quickly.</p>
+                        </div>
+                        <div class="border-l-4 border-blue-500 pl-3 py-1">
+                            <h3 class="font-medium text-gray-800">Iron-Rich Foods</h3>
+                            <p class="text-sm text-gray-600 mt-1">Include lean red meat, beans, and leafy greens in your
+                                diet to maintain healthy iron levels.</p>
+                        </div>
+                        <div class="border-l-4 border-green-500 pl-3 py-1">
+                            <h3 class="font-medium text-gray-800">Avoid Strenuous Activity</h3>
+                            <p class="text-sm text-gray-600 mt-1">Refrain from heavy lifting or intense exercise for at
+                                least 24 hours after donating.</p>
+                        </div>
+                        <div class="border-l-4 border-yellow-500 pl-3 py-1">
+                            <h3 class="font-medium text-gray-800">Get Enough Rest</h3>
+                            <p class="text-sm text-gray-600 mt-1">Ensure you get 7-8 hours of sleep the night before and
+                                after donation.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Donation Guidelines -->
+                <div class="bg-white rounded shadow-sm p-6">
+                    <h2 class="text-lg font-bold text-gray-800 mb-4">Donation Guidelines</h2>
+                    <div class="space-y-3">
+                        <div class="flex items-start">
+                            <div class="w-6 h-6 flex items-center justify-center text-primary mt-0.5">
+                                <i class="ri-checkbox-circle-line"></i>
+                            </div>
+                            <p class="ml-2 text-sm text-gray-700">You must be at least 17 years old</p>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-6 h-6 flex items-center justify-center text-primary mt-0.5">
+                                <i class="ri-checkbox-circle-line"></i>
+                            </div>
+                            <p class="ml-2 text-sm text-gray-700">Weight at least 110 pounds (50 kg)</p>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-6 h-6 flex items-center justify-center text-primary mt-0.5">
+                                <i class="ri-checkbox-circle-line"></i>
+                            </div>
+                            <p class="ml-2 text-sm text-gray-700">Wait at least 56 days between whole blood donations
+                            </p>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-6 h-6 flex items-center justify-center text-primary mt-0.5">
+                                <i class="ri-checkbox-circle-line"></i>
+                            </div>
+                            <p class="ml-2 text-sm text-gray-700">Be in good general health and feeling well</p>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-6 h-6 flex items-center justify-center text-primary mt-0.5">
+                                <i class="ri-checkbox-circle-line"></i>
+                            </div>
+                            <p class="ml-2 text-sm text-gray-700">Have not traveled to malaria-risk areas in the past 3
+                                months</p>
+                        </div>
+                        <div class="mt-4">
+                            <a href="#" class="text-primary text-sm font-medium hover:underline">View complete
+                                eligibility requirements</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const API_BASE_URL = 'http://localhost:5000/api/donor';
+        let currentPage = 1;
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+        let donorData = null;
+
+        // Utility function to make API requests
+        async function makeApiRequest(endpoint, method = 'GET', body = null, isFile = false) {
+            const token = localStorage.getItem('token');
+            const headers = {
+                'Authorization': `Bearer ${token}`,
+            };
+            if (!isFile) {
+                headers['Content-Type'] = 'application/json';
+            }
+            const options = { method, headers };
+            if (body && !isFile) {
+                options.body = JSON.stringify(body);
+            } else if (body && isFile) {
+                options.body = body;
+            }
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+            if (response.status === 401) {
+                localStorage.removeItem('token');
+                showLoginModal();
+                throw new Error('Unauthorized');
+            }
+            return response;
+        }
+
+        // Show login modal
+        function showLoginModal() {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+
+        // Hide login modal
+        function hideLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('loginError').classList.add('hidden');
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+
+        // Handle login
+        async function handleLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const errorElement = document.getElementById('loginError');
+            try {
+                const response = await fetch(`${API_BASE_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password }),
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    donorData = data.user;
+                    hideLoginModal();
+                    initializeDashboard();
+                } else {
+                    errorElement.textContent = data.message;
+                    errorElement.classList.remove('hidden');
+                }
+            } catch (error) {
+                errorElement.textContent = 'Failed to login. Please try again.';
+                errorElement.classList.remove('hidden');
+            }
+        }
+
+        // Handle logout
+        function handleLogout() {
+            localStorage.removeItem('token');
+            donorData = null;
+            initializeDashboard();
+        }
+
+        // Initialize dashboard
+        async function initializeDashboard() {
+            const token = localStorage.getItem('token');
+            const authSection = document.getElementById('authSection');
+            if (token) {
+                try {
+                    const profileResponse = await makeApiRequest('/profile');
+                    donorData = await profileResponse.json();
+                    authSection.innerHTML = `
+                        <div class="flex items-center space-x-2">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                                <img src="${donorData.medicalReport || 'https://via.placeholder.com/100'}" alt="Profile" class="w-full h-full object-cover">
+                            </div>
+                            <div class="hidden md:block">
+                                <p class="text-sm font-medium text-gray-800">${donorData.firstName} ${donorData.lastName}</p>
+                                <p class="text-xs text-gray-500">${donorData.bloodType} Donor</p>
+                            </div>
+                            <button id="logoutButton" class="px-4 py-2 text-sm bg-primary text-white rounded-button hover:bg-red-700">Logout</button>
+                        </div>
+                    `;
+                    document.getElementById('logoutButton').addEventListener('click', handleLogout);
+                    await Promise.all([
+                        fetchProfile(),
+                        fetchEligibility(),
+                        fetchDonations(),
+                        fetchAppointments(),
+                    ]);
+                } catch (error) {
+                    console.error('Initialization error:', error);
+                    showLoginModal();
+                }
+            } else {
+                authSection.innerHTML = `
+                    <button id="loginButton" class="px-4 py-2 text-sm bg-primary text-white rounded-button hover:bg-red-700">Login</button>
+                `;
+                document.getElementById('loginButton').addEventListener('click', showLoginModal);
+                showLoginModal();
+            }
+        }
+
+        // Fetch and display profile
+        async function fetchProfile() {
+            const profilePicture = document.getElementById('profilePicture');
+            const profileName = document.getElementById('profileName');
+            const bloodType = document.getElementById('bloodType');
+            const donorId = document.getElementById('donorId');
+            const welcomeMessage = document.getElementById('welcomeMessage');
+
+            profilePicture.src = donorData.medicalReport || 'https://via.placeholder.com/100';
+            profileName.textContent = `${donorData.firstName}`;
+            bloodType.textContent = `${donorData.bloodType} Donor`;
+            donorId.textContent = `ID: ${donorData.donorId}`;
+            welcomeMessage.textContent = `Welcome back, ${donorData.firstName}!`;
+        }
+
+        // Fetch and display eligibility status
+        async function fetchEligibility() {
+            const response = await makeApiRequest('/eligibility');
+            const data = await response.json();
+            const eligibilityStatus = document.getElementById('eligibilityStatus');
+            const totalDonations = document.getElementById('totalDonations');
+            const lastDonation = document.getElementById('lastDonation');
+            const nextEligible = document.getElementById('nextEligible');
+            const livesImpacted = document.getElementById('livesImpacted');
+            const livesImpactedBar = document.getElementById('livesImpactedBar');
+
+            eligibilityStatus.innerHTML = `<p class="text-${data.isEligible ? 'green' : 'red'}-800 font-medium text-sm">${data.isEligible ? 'Eligible to donate' : 'Not eligible'}</p>`;
+            eligibilityStatus.classList.remove('bg-gray-200');
+            eligibilityStatus.classList.add(data.isEligible ? 'bg-green-100' : 'bg-red-100');
+            totalDonations.textContent = `${data.totalUnits} units`;
+            lastDonation.textContent = data.lastDonation ? new Date(data.lastDonation).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-';
+            nextEligible.textContent = data.nextEligibleDate ? new Date(data.nextEligibleDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '-';
+            const lives = data.totalUnits * 3; // Assuming 1 unit impacts 3 lives
+            livesImpacted.textContent = lives;
+            livesImpactedBar.style.width = `${Math.min(lives / 50 * 100, 100)}%`;
+        }
+
+        // Fetch and display donation history
+        async function fetchDonations(page = 1) {
+            currentPage = page;
+            const response = await makeApiRequest(`/donations?page=${page}&limit=5`);
+            const data = await response.json();
+            const donationTableBody = document.getElementById('donationTableBody');
+            const donationPaginationInfo = document.getElementById('donationPaginationInfo');
+            const donationPagination = document.getElementById('donationPagination');
+
+            donationTableBody.innerHTML = data.donations.map(d => `
+                <tr>
+                    <td class="font-medium">${new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</td>
+                    <td>${d.location}</td>
+                    <td>${d.type}</td>
+                    <td>${d.units} unit${d.units > 1 ? 's' : ''}</td>
+                    <td>${d.notes || '-'}</td>
+                </tr>
+            `).join('');
+            donationPaginationInfo.textContent = `Showing ${Math.min(data.pagination.limit, data.pagination.total)} of ${data.pagination.total} donations`;
+            donationPagination.innerHTML = `
+                <button id="prevPage" class="w-9 h-9 flex items-center justify-center rounded border border-gray-300 text-gray-500 hover:bg-gray-50 ${data.pagination.page === 1 ? 'opacity-50 cursor-not-allowed' : ''}">
+                    <i class="ri-arrow-left-s-line"></i>
+                </button>
+                ${Array.from({ length: data.pagination.pages }, (_, i) => i + 1).map(p => `
+                    <button class="page-btn w-9 h-9 flex items-center justify-center rounded border border-gray-300 ${p === data.pagination.page ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-50'}" data-page="${p}">${p}</button>
+                `).join('')}
+                <button id="nextPage" class="w-9 h-9 flex items-center justify-center rounded border border-gray-300 text-gray-500 hover:bg-gray-50 ${data.pagination.page === data.pagination.pages ? 'opacity-50 cursor-not-allowed' : ''}">
+                    <i class="ri-arrow-right-s-line"></i>
+                </button>
+            `;
+            document.querySelectorAll('.page-btn').forEach(btn => {
+                btn.addEventListener('click', () => fetchDonations(parseInt(btn.dataset.page)));
+            });
+            document.getElementById('prevPage').addEventListener('click', () => {
+                if (data.pagination.page > 1) fetchDonations(data.pagination.page - 1);
+            });
+            document.getElementById('nextPage').addEventListener('click', () => {
+                if (data.pagination.page < data.pagination.pages) fetchDonations(data.pagination.page + 1);
+            });
+        }
+
+        // Export donation history
+        async function exportDonations() {
+            const response = await makeApiRequest('/donations/export');
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'donation_history.csv';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Fetch and display appointments
+        async function fetchAppointments() {
+            const response = await makeApiRequest('/appointments');
+            const appointments = await response.json();
+            const appointmentList = document.getElementById('appointmentList');
+            const calendarDays = document.getElementById('calendarDays');
+
+            // Update calendar
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const today = new Date();
+            calendarDays.innerHTML = Array(firstDay).fill('<div></div>').concat(
+                Array.from({ length: daysInMonth }, (_, i) => {
+                    const day = i + 1;
+                    const date = new Date(currentYear, currentMonth, day);
+                    const isToday = date.toDateString() === today.toDateString();
+                    const hasAppointment = appointments.some(a => new Date(a.date).toDateString() === date.toDateString());
+                    return `<div class="calendar-day ${isToday ? 'today' : ''} ${hasAppointment ? 'appointment' : ''}">${day}</div>`;
+                })
+            ).join('');
+            document.getElementById('calendarMonth').textContent = new Date(currentYear, currentMonth).toLocaleString('en-US', { month: 'long', year: 'numeric' });
+
+            // Update appointment list
+            appointmentList.innerHTML = appointments.length ? appointments.map(a => `
+                <div class="bg-red-50 border-l-4 border-primary p-4 rounded-r mb-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center">
+                            <i class="ri-calendar-check-line text-primary text-xl"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-primary">Upcoming Donation</h3>
+                            <div class="mt-2 text-sm text-gray-700">
+                                <p>${new Date(a.date).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })}</p>
+                                <p class="mt-1">${a.location}</p>
+                            </div>
+                            <div class="mt-3 flex gap-2">
+                                <button class="confirm-btn px-3 py-1.5 text-xs bg-primary text-white rounded-button hover:bg-red-700 whitespace-nowrap" data-id="${a._id}" ${a.status === 'confirmed' ? 'disabled' : ''}>Confirm</button>
+                                <button class="reschedule-btn px-3 py-1.5 text-xs bg-white border border-gray-300 text-gray-700 rounded-button hover:bg-gray-50 whitespace-nowrap" data-id="${a._id}">Reschedule</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('') : '<p class="text-sm text-gray-600">No upcoming appointments.</p>';
+
+            // Add event listeners for confirm and reschedule buttons
+            document.querySelectorAll('.confirm-btn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    await makeApiRequest(`/appointments/${btn.dataset.id}/confirm`, 'PUT');
+                    fetchAppointments();
+                });
+            });
+            document.querySelectorAll('.reschedule-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const date = prompt('Enter new date (YYYY-MM-DD HH:mm):');
+                    const location = prompt('Enter new location:');
+                    if (date && location) {
+                        makeApiRequest(`/appointments/${btn.dataset.id}/reschedule`, 'PUT', { date, location });
+                        fetchAppointments();
+                    }
+                });
+            });
+
+            // Calendar day selection
+            document.querySelectorAll('.calendar-day').forEach(day => {
+                day.addEventListener('click', function () {
+                    document.querySelectorAll('.calendar-day').forEach(d => {
+                        if (!d.classList.contains('today') && !d.classList.contains('appointment')) {
+                            d.classList.remove('bg-red-100');
+                        }
+                    });
+                    if (!this.classList.contains('appointment') && !this.classList.contains('today')) {
+                        this.classList.add('bg-red-100');
+                    }
+                });
+            });
+        }
+
+        // Schedule new appointment
+        async function scheduleNewAppointment() {
+            const date = prompt('Enter appointment date (YYYY-MM-DD HH:mm):');
+            const location = prompt('Enter location:');
+            if (date && location) {
+                await makeApiRequest('/appointments', 'POST', { date, location });
+                fetchAppointments();
+            }
+        }
+
+        // Update profile (placeholder, needs form)
+        function updateProfile() {
+            alert('Profile update form to be implemented.');
+            // Implement form to update firstName, lastName, phone, address, bloodType, dob, medicalReport
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeDashboard();
+            document.getElementById('submitLogin').addEventListener('click', handleLogin);
+            document.getElementById('cancelLogin').addEventListener('click', hideLoginModal);
+            document.getElementById('exportDonations').addEventListener('click', exportDonations);
+            document.getElementById('scheduleNewAppointment').addEventListener('click', scheduleNewAppointment);
+            document.getElementById('updateProfile').addEventListener('click', updateProfile);
+            document.getElementById('prevMonth').addEventListener('click', () => {
+                currentMonth--;
+                if (currentMonth < 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                }
+                fetchAppointments();
+            });
+            document.getElementById('nextMonth').addEventListener('click', () => {
+                currentMonth++;
+                if (currentMonth > 11) {
+                    currentMonth = 0;
+                    currentYear++;
+                }
+                fetchAppointments();
+            });
+        });
+    </script>
+</body>
+
+</html>
