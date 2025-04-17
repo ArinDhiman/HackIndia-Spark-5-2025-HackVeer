@@ -21,7 +21,3 @@
 - **JavaScript (for interactivity)**  
 - (Backend not integrated yet)
 
----
-
-## 📁 Folder Structure
-
