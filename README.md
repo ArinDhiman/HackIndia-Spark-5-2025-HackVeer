@@ -2,11 +2,6 @@
 
 **Blood Bridge** is a digital blood bank system designed to simplify and accelerate the blood donation process. Built for HackIndia Hackathon, it aims to connect blood donors and patients efficiently, enabling emergency donations within 1–2 hours.
 
-## 🌐 Live Demo
-[Add Live Hosting Link if available]
-
----
-
 ## 🚀 Features
 
 - ✅ Quick blood donation system (1–2 hour processing)
